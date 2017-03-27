@@ -46,6 +46,12 @@ Here's an example slides.md:
 - bullet 3
 ```
 
+If you need raw html in your slides, use a *special* `rawhtml` code block:
+
+    ```rawhtml
+    <div>this html will be <em>injected</em> directly</div>
+    ```
+
 A sample makefile which works well with this:
 
 ```make 
