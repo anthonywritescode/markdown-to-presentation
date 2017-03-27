@@ -176,6 +176,7 @@ STYLE_SCSS = '''\
     border: 1px solid #ccccc8;
     border-radius: 4px;
     box-shadow: none;
+    overflow-x: auto;
 }
 
 pre code {
