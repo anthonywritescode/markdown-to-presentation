@@ -246,10 +246,6 @@ class RawHTMLRenderer(CodeRenderer):
         else:
             return super().block_code(code, lang)
 
-    def table(self, *args, **kwargs):
-        ret = super().table(*args, **kwargs)
-        return ret.replace('<table>', '<table class="table">')
-
 
 def _to_slide(md):
     highlighted = highlight(md, Renderer=RawHTMLRenderer)
