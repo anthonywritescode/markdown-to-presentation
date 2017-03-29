@@ -177,15 +177,19 @@ STYLE_SCSS = '''\
     border-radius: 4px;
     box-shadow: none;
     overflow-x: auto;
-}
 
-pre code {
-    background-color: #f5f5f1;
+    code {
+        background-color: #f5f5f1;
+    }
 }
 
 .reveal .controls {
     left: 10px;
     right: auto;
+
+    .navigate-up, .navigate-down {
+        display: none;
+    }
 }
 
 .reveal li {
@@ -201,6 +205,21 @@ pre code {
 .reveal section ul ol {
     padding-left: 1em;
 }
+
+.reveal table {
+    border-collapse: collapse;
+
+    td, th {
+        border-width: 1px;
+        border-style: solid;
+        padding: .25em;
+    }
+
+    thead {
+        font-weight: bold;
+    }
+}
+
 
 // application code
 
