@@ -94,6 +94,7 @@ def _make_package_json(target):
     with open(target, 'w') as f:
         f.write(json.dumps({
             'name': 'presentation',
+            'version': '0.0.0',
             'author': 'Anthony Sottile',
             'dependencies': {'reveal.js': '2.6.2'},
         }))
