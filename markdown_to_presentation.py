@@ -177,6 +177,7 @@ STYLE_SCSS = '''\
         color: #333;
         border: 1px solid #ccccc8;
         border-radius: 4px;
+        padding: 5px;
         box-shadow: none;
         overflow-x: auto;
 
