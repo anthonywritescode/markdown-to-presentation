@@ -208,6 +208,7 @@ STYLE_SCSS = '''\
 
 .reveal table {
     border-collapse: collapse;
+    margin: auto;
 
     td, th {
         border-width: 1px;
