@@ -174,6 +174,7 @@ STYLE_SCSS = '''\
 .reveal {
     pre {
         background-color: #f5f5f1;
+        color: #333;
         border: 1px solid #ccccc8;
         border-radius: 4px;
         box-shadow: none;
