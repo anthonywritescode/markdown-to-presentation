@@ -171,53 +171,61 @@ STYLE_SCSS = '''\
 
 @import 'node_modules/reveal.js/css/theme/template/theme';
 
-.reveal pre {
-    background-color: #f5f5f1;
-    border: 1px solid #ccccc8;
-    border-radius: 4px;
-    box-shadow: none;
-    overflow-x: auto;
-
-    code {
+.reveal {
+    pre {
         background-color: #f5f5f1;
-    }
-}
+        border: 1px solid #ccccc8;
+        border-radius: 4px;
+        box-shadow: none;
+        overflow-x: auto;
 
-.reveal .controls {
-    left: 10px;
-    right: auto;
-
-    .navigate-up, .navigate-down {
-        display: none;
-    }
-}
-
-.reveal li {
-    padding-bottom: .5em;
-}
-
-.reveal section img {
-    background: none;
-    border: 0;
-    box-shadow: none;
-}
-
-.reveal section ul ol {
-    padding-left: 1em;
-}
-
-.reveal table {
-    border-collapse: collapse;
-    margin: auto;
-
-    td, th {
-        border-width: 1px;
-        border-style: solid;
-        padding: .25em;
+        code {
+            background-color: #f5f5f1;
+        }
     }
 
-    thead {
-        font-weight: bold;
+    h1, h2, h3, h4, h5, h6 {
+        code {
+            text-transform: none;
+        }
+    }
+
+    .controls {
+        left: 10px;
+        right: auto;
+
+        .navigate-up, .navigate-down {
+            display: none;
+        }
+    }
+
+    li {
+        padding-bottom: .5em;
+    }
+
+    section img {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    section ul ol {
+        padding-left: 1em;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: auto;
+
+        td, th {
+            border-width: 1px;
+            border-style: solid;
+            padding: .25em;
+        }
+
+        thead {
+            font-weight: bold;
+        }
     }
 }
 
