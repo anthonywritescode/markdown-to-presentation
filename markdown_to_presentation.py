@@ -5,6 +5,7 @@ import json
 import os.path
 import shutil
 import subprocess
+import tempfile
 import sys
 
 import pkg_resources
@@ -67,7 +68,6 @@ def _read_mtp_version():
 
 
 def _write_mtp_version():
-    print('writing version')
     os.makedirs(MTPDIR, exist_ok=True)
     with open(MTPVERSION, 'w') as f:
         f.write(VERSION)
@@ -86,8 +86,58 @@ def show_makefile():
     print(MAKEFILE)
 
 
-def push():
-    raise NotImplementedError('TODO!')
+USER = 'Travis-CI'
+EMAIL = 'user@example.com'
+
+
+def push(paths, *, master_branch, pages_branch):
+    if os.environ.get('TRAVIS_BRANCH') != master_branch:
+        print(f'Abort: not building {master_branch}')
+        return 0
+    if os.environ.get('TRAVIS_PULL_REQUEST') != 'false':
+        print(f'Abort: building a pull request')
+        return 0
+
+    token = os.environ['GH_TOKEN']
+    repo = os.environ['TRAVIS_REPO_SLUG']
+    remote = f'https://{token}@github.com/{repo}'
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with cwd(tmpdir):
+            print('Cloning...', flush=True)
+            proc_ret = subprocess.run(
+                ('git', 'clone', remote, '.'),
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            if proc_ret.returncode:
+                print('git clone failed', flush=True)
+                return proc_ret.returncode
+
+            print(f'Checkout out {pages_branch}...', flush=True)
+            subprocess.check_call(('git', 'checkout', pages_branch))
+
+            print('Removing existing files...', flush=True)
+            all_files = subprocess.check_output(('git', 'ls-files'))
+            all_files = all_files.decode().splitlines()
+            subprocess.check_call(('git', 'rm', *all_files))
+
+        print('Copying new files...', flush=True)
+        subprocess.check_call(('rsync', '-avrR', *paths, tmpdir))
+
+        with cwd(tmpdir):
+            print('Committing...', flush=True)
+            subprocess.check_call(('git', 'add', '.'))
+            subprocess.check_call(('git', 'config', 'user.name', USER))
+            subprocess.check_call(('git', 'config', 'user.email', EMAIL))
+            build_number = os.environ['TRAVIS_BUILD_NUMBER']
+            subprocess.check_call((
+                'git', 'commit', '-m',
+                f'Deployed {build_number} to Github Pages',
+            ))
+            print('Pushing...', flush=True)
+            return subprocess.call(
+                ('git', 'push', 'origin', 'HEAD'),
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
 
 
 def _make_package_json(target):
@@ -333,7 +383,10 @@ def main(argv=None):
 
     subparsers.add_parser('run-build')
     subparsers.add_parser('show-makefile')
-    subparsers.add_parser('push')
+    push_parser = subparsers.add_parser('push')
+    push_parser.add_argument('paths', nargs='+')
+    push_parser.add_argument('--master-branch', default='master')
+    push_parser.add_argument('--pages-branch', default='pages')
 
     run_backend_parser = subparsers.add_parser('run-backend')
     run_backend_parser.add_argument('target')
@@ -345,7 +398,10 @@ def main(argv=None):
     elif args.command == 'show-makefile':
         return show_makefile()
     elif args.command == 'push':
-        return push()
+        return push(
+            args.paths,
+            master_branch=args.master_branch, pages_branch=args.pages_branch,
+        )
     elif args.command == 'run-backend':
         return run_backend(args.target)
     else:

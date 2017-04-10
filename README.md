@@ -63,10 +63,13 @@ venv: requirements.txt
     venv/bin/pip install -rrequirements.txt
     venv/bin/pre-commit install -f --install-hooks
 
-MTP := run-build push
-.PHONY: $(MTP)
-$(MTP): venv
-    venv/bin/markdown-to-presentation $@
+.PHONY: run-build
+run-build: venv
+    venv/bin/markdown-to-presentation run-build
+
+.PHONY: push
+push: venv
+    venv/bin/markdown-to-presentation push index.htm build
 
 clean:
     rm -rf .mtp venv build index.htm
