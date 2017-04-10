@@ -387,7 +387,7 @@ def main(argv=None):
     push_parser = subparsers.add_parser('push')
     push_parser.add_argument('paths', nargs='+')
     push_parser.add_argument('--master-branch', default='master')
-    push_parser.add_argument('--pages-branch', default='pages')
+    push_parser.add_argument('--pages-branch', default='gh-pages')
 
     run_backend_parser = subparsers.add_parser('run-backend')
     run_backend_parser.add_argument('target')
