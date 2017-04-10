@@ -91,6 +91,7 @@ EMAIL = 'user@example.com'
 
 
 def push(paths, *, master_branch, pages_branch):
+    paths = ['.travis.yml'] + paths
     if os.environ.get('TRAVIS_BRANCH') != master_branch:
         print(f'Abort: not building {master_branch}')
         return 0
