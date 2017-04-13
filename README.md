@@ -77,4 +77,49 @@ clean:
 
 ## Hooking up push to github pages
 
-TODO!
+Acquire a [push token](https://github.com/settings/tokens/new) which has the
+`public_repo` permission.
+
+Use [`travis encrypt`](https://docs.travis-ci.com/user/encryption-keys/) to
+encrypt your push token.  You'll need the yaml it spits out to fill out your
+`.travis.yml`.
+
+Make a `.travis.yml` which looks something like this:
+
+```yaml
+install: pip install virtualenv
+script: make
+after_success: make push
+branches:
+    except:
+        - gh-pages
+env:
+    global:
+        # GH_TOKEN
+        - secure: ...
+```
+
+For your `make push` target, invoke something like this:
+
+```makefile
+.PHONY: push
+push: venv
+    venv/bin/markdown-to-presentation push index.htm build
+```
+
+The `markdown-to-presentation push` executable takes the following arguments:
+
+```
+$ markdown-to-presentation push --help
+usage: markdown-to-presentation push [-h] [--master-branch MASTER_BRANCH]
+                                     [--pages-branch PAGES_BRANCH]
+                                     paths [paths ...]
+
+positional arguments:
+  paths
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --master-branch MASTER_BRANCH
+  --pages-branch PAGES_BRANCH
+```
