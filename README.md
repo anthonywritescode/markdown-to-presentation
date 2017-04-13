@@ -81,8 +81,8 @@ Acquire a [push token](https://github.com/settings/tokens/new) which has the
 `public_repo` permission.
 
 Use [`travis encrypt`](https://docs.travis-ci.com/user/encryption-keys/) to
-encrypt your push token.  You'll need the yaml it spits out to fill out your
-`.travis.yml`.
+encrypt your push token as `GH_TOKEN=...`.  You'll need the yaml it spits out
+to fill out your `.travis.yml`.
 
 Make a `.travis.yml` which looks something like this:
 
