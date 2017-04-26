@@ -90,8 +90,8 @@ USER = 'Travis-CI'
 EMAIL = 'user@example.com'
 
 
-def push(paths, *, master_branch, pages_branch):
-    paths = ['.travis.yml'] + paths
+def push(paths, source, *, master_branch, pages_branch):
+    paths = ['.travis.yml'] + [os.path.join(source, path) for path in paths]
     if os.environ.get('TRAVIS_BRANCH') != master_branch:
         print(f'Abort: not building {master_branch}')
         return 0
@@ -386,6 +386,10 @@ def main(argv=None):
     subparsers.add_parser('show-makefile')
     push_parser = subparsers.add_parser('push')
     push_parser.add_argument('paths', nargs='+')
+    push_parser.add_argument(
+        '--source', default='.',
+        help='directory to upload from (defaults to the current directory)',
+    )
     push_parser.add_argument('--master-branch', default='master')
     push_parser.add_argument('--pages-branch', default='gh-pages')
 
@@ -400,7 +404,7 @@ def main(argv=None):
         return show_makefile()
     elif args.command == 'push':
         return push(
-            args.paths,
+            args.paths, args.source,
             master_branch=args.master_branch, pages_branch=args.pages_branch,
         )
     elif args.command == 'run-backend':
