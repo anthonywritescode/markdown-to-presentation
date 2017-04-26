@@ -4,7 +4,7 @@ setup(
     name='markdown-to-presentation',
     description='Takes markdown and turns it into an html slideshow.',
     url='https://github.com/anthonywritescode/markdown-to-presentation',
-    version='0.0.12',
+    version='0.0.13',
     author='Anthony Sottile',
     author_email='asottile@umich.edu',
     classifiers=[
