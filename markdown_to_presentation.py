@@ -309,7 +309,6 @@ INDEX_TMPL = '''\
         <script src="build/presentation.js"></script>
         <script>
             Reveal.initialize({{
-                history: true,
                 transition: 'linear',
                 keyboard: {{39: 'next', 37: 'prev'}}
             }});
