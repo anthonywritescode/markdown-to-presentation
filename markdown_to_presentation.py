@@ -119,10 +119,10 @@ def push(paths, *, master_branch, pages_branch):
             print('Removing existing files...', flush=True)
             all_files = subprocess.check_output(('git', 'ls-files'))
             all_files = all_files.decode().splitlines()
-            subprocess.check_call(('git', 'rm', *all_files))
+            subprocess.check_call(('git', 'rm', '--quiet', *all_files))
 
         print('Copying new files...', flush=True)
-        subprocess.check_call(('rsync', '-avrR', *paths, tmpdir))
+        subprocess.check_call(('rsync', '-avrRq', *paths, tmpdir))
 
         with cwd(tmpdir):
             print('Committing...', flush=True)
