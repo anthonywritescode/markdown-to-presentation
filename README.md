@@ -54,7 +54,7 @@ If you need raw html in your slides, use a *special* `rawhtml` code block:
 
 A sample makefile which works well with this:
 
-```make 
+```make
 all: run-build
 
 venv: requirements.txt
