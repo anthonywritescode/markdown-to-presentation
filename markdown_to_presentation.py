@@ -5,11 +5,16 @@ import json
 import os.path
 import shutil
 import subprocess
-import tempfile
 import sys
+import tempfile
+from typing import Callable
+from typing import Dict
+from typing import Generator
+from typing import List
+from typing import Optional
+from typing import Sequence
 
 import pkg_resources
-
 from markdown_code_blocks import CodeRenderer
 from markdown_code_blocks import highlight
 
@@ -51,7 +56,7 @@ VERSION = pkg_resources.get_distribution('markdown-to-presentation').version
 
 
 @contextlib.contextmanager
-def cwd(pth):
+def cwd(pth: str) -> Generator[None, None, None]:
     pwd = os.getcwd()
     os.chdir(pth)
     try:
@@ -60,20 +65,20 @@ def cwd(pth):
         os.chdir(pwd)
 
 
-def _read_mtp_version():
+def _read_mtp_version() -> Optional[str]:
     try:
         return open(MTPVERSION).read()
     except OSError:
         return None
 
 
-def _write_mtp_version():
+def _write_mtp_version() -> None:
     os.makedirs(MTPDIR, exist_ok=True)
     with open(MTPVERSION, 'w') as f:
         f.write(VERSION)
 
 
-def run_build():
+def run_build() -> int:
     # Acts as a major version which causes a full rebuild
     if _read_mtp_version() != VERSION:
         _write_mtp_version()
@@ -82,15 +87,16 @@ def run_build():
     return subprocess.run(('make', '-f', '-'), input=makefile).returncode
 
 
-def show_makefile():
+def show_makefile() -> int:
     print(MAKEFILE)
+    return 0
 
 
 USER = 'Travis-CI'
 EMAIL = 'user@example.com'
 
 
-def push(paths, *, master_branch, pages_branch):
+def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
     paths = ['.travis.yml'] + paths
     if os.environ.get('TRAVIS_BRANCH') != master_branch:
         print(f'Abort: not building {master_branch}')
@@ -141,7 +147,7 @@ def push(paths, *, master_branch, pages_branch):
             )
 
 
-def _make_package_json(target):
+def _make_package_json(target: str) -> int:
     with open(target, 'w') as f:
         f.write(json.dumps({
             'name': 'presentation',
@@ -149,16 +155,18 @@ def _make_package_json(target):
             'author': 'Anthony Sottile',
             'dependencies': {'reveal.js': '2.6.2'},
         }))
+    return 0
 
 
-def _make_node_modules(target):
+def _make_node_modules(target: str) -> int:
     with cwd(MTPDIR):
         subprocess.check_call(('npm', 'install'))
         subprocess.check_call(('npm', 'prune'))
     os.utime(target)
+    return 0
 
 
-def _make_presentation_css(target):
+def _make_presentation_css(target: str) -> int:
     return subprocess.call((
         sys.executable, '-m', 'sassc',
         '-t', 'compressed',
@@ -166,9 +174,10 @@ def _make_presentation_css(target):
     ))
 
 
-def _make_presentation_js(target):
+def _make_presentation_js(target: str) -> int:
     # For now, the only js is reveal
     shutil.copy('.mtp/node_modules/reveal.js/js/reveal.min.js', target)
+    return 0
 
 
 STYLE_SCSS = '''\
@@ -290,9 +299,10 @@ STYLE_SCSS = '''\
 '''
 
 
-def _make_style_scss(target):
+def _make_style_scss(target: str) -> int:
     with open(target, 'w') as f:
         f.write(STYLE_SCSS)
+    return 0
 
 
 INDEX_TMPL = '''\
@@ -321,28 +331,29 @@ SLIDE_DELIM = '\n***\n\n'
 
 
 class RawHTMLRenderer(CodeRenderer):
-    def block_code(self, code, lang):
+    def block_code(self, code: str, lang: str) -> str:
         if lang == 'rawhtml':
             return code
         else:
             return super().block_code(code, lang)
 
 
-def _to_slide(md):
+def _to_slide(md: str) -> str:
     highlighted = highlight(md, Renderer=RawHTMLRenderer)
     return f'<section>{highlighted}</section>'
 
 
-def _make_index_htm(target):
+def _make_index_htm(target: str) -> int:
     contents = open('slides.md').read()
     html = INDEX_TMPL.format(slides=''.join(
         _to_slide(slide) for slide in contents.split(SLIDE_DELIM)
     ))
     with open(target, 'w') as f:
         f.write(html)
+    return 0
 
 
-BACKENDS = {
+BACKENDS: Dict[str, Callable[[str], int]] = {
     '.mtp/package.json': _make_package_json,
     '.mtp/node_modules': _make_node_modules,
     '.mtp/style.scss': _make_style_scss,
@@ -352,13 +363,13 @@ BACKENDS = {
 }
 
 
-def run_backend(target):
-    def _make_old():
+def run_backend(target: str) -> int:
+    def _make_old() -> None:
         print(f'make old {target}')
         if os.path.exists(target):
             os.utime(target, (0, 0))
 
-    def _make_new():
+    def _make_new() -> None:
         print(f'make new {target}')
         if os.path.exists(target):
             os.utime(target)
@@ -376,7 +387,7 @@ def run_backend(target):
         return ret
 
 
-def main(argv=None):
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
