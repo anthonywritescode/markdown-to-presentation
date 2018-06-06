@@ -28,5 +28,3 @@ repos:
     rev: v0.600
     hooks:
     -   id: mypy
-        # not an actual source module
-        exclude: ^pre_commit_mirror_maker/python/setup.py$
