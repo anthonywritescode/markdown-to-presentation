@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 import argparse
 import contextlib
+import html
 import json
 import os.path
 import shutil
@@ -335,6 +336,8 @@ class RawHTMLRenderer(CodeRenderer):
     def block_code(self, code: str, lang: str) -> str:
         if lang == 'rawhtml':
             return code
+        elif lang == 'comment':
+            return f'<!--\n{html.escape(code)}\n-->'
         else:
             return super().block_code(code, lang)
 
