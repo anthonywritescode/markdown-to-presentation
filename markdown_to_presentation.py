@@ -120,8 +120,18 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
                 print('git clone failed', flush=True)
                 return proc_ret.returncode
 
-            print(f'Checkout out {pages_branch}...', flush=True)
-            subprocess.check_call(('git', 'checkout', pages_branch))
+            cmd = (
+                'git', 'rev-parse', '--quiet', '--verify',
+                f'remotes/origin/{pages_branch}',
+            )
+            if subprocess.call(cmd, stdout=subprocess.DEVNULL):
+                print(f'Checkout out {pages_branch}...', flush=True)
+                subprocess.check_call(('git', 'checkout', pages_branch))
+            else:
+                print(f'Creating {pages_branch}...', flush=True)
+                subprocess.check_call((
+                    'git', 'checkout', '--orphan', pages_branch,
+                ))
 
             print('Removing existing files...', flush=True)
             all_files = subprocess.check_output(('git', 'ls-files'))
