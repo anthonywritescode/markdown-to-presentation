@@ -124,7 +124,7 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
                 'git', 'rev-parse', '--quiet', '--verify',
                 f'remotes/origin/{pages_branch}',
             )
-            if subprocess.call(cmd, stdout=subprocess.DEVNULL):
+            if not subprocess.call(cmd, stdout=subprocess.DEVNULL):
                 print(f'Checkout out {pages_branch}...', flush=True)
                 subprocess.check_call(('git', 'checkout', pages_branch))
             else:
