@@ -136,7 +136,7 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
             print('Removing existing files...', flush=True)
             all_files = subprocess.check_output(('git', 'ls-files'))
             all_files = all_files.decode().splitlines()
-            subprocess.check_call(('git', 'rm', '--quiet', *all_files))
+            subprocess.check_call(('git', 'rm', '-f', '--quiet', *all_files))
 
         print('Copying new files...', flush=True)
         subprocess.check_call(('rsync', '-avrRq', *paths, tmpdir))
