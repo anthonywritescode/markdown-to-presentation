@@ -180,7 +180,6 @@ def _make_node_modules(target: str) -> int:
 def _make_presentation_css(target: str) -> int:
     return subprocess.call((
         sys.executable, '-m', 'sassc',
-        '--import-extensions', '.css',
         '-t', 'compressed',
         '.mtp/style.scss', target,
     ))

@@ -13,7 +13,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     install_requires=[
-        'libsass',
+        'libsass>=0.16.1',
         'markdown-code-blocks>=1.1.0',
     ],
     py_modules=['markdown_to_presentation'],
