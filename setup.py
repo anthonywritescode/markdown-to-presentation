@@ -4,7 +4,7 @@ setup(
     name='markdown-to-presentation',
     description='Takes markdown and turns it into an html slideshow.',
     url='https://github.com/anthonywritescode/markdown-to-presentation',
-    version='0.0.24',
+    version='0.0.25',
     author='Anthony Sottile',
     author_email='asottile@umich.edu',
     classifiers=[
@@ -14,7 +14,7 @@ setup(
     ],
     install_requires=[
         'libsass>=0.16.1',
-        'markdown-code-blocks>=1.1.0',
+        'markdown-code-blocks>=1.3.0',
     ],
     py_modules=['markdown_to_presentation'],
     entry_points={
