@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/anthonywritescode.markdown-to-presentation?branchName=master)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=11&branchName=master)
+
 markdown-to-presentation
 ========================
 
