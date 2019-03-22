@@ -160,12 +160,14 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
 
 def _make_package_json(target: str) -> int:
     with open(target, 'w') as f:
-        f.write(json.dumps({
-            'name': 'presentation',
-            'version': '0.0.0',
-            'author': 'Anthony Sottile',
-            'dependencies': {'reveal.js': '2.6.2'},
-        }))
+        f.write(
+            json.dumps({
+                'name': 'presentation',
+                'version': '0.0.0',
+                'author': 'Anthony Sottile',
+                'dependencies': {'reveal.js': '2.6.2'},
+            }),
+        )
     return 0
 
 
@@ -358,9 +360,11 @@ def _to_slide(md: str) -> str:
 
 def _make_index_htm(target: str) -> int:
     contents = open('slides.md').read()
-    html = INDEX_TMPL.format(slides=''.join(
-        _to_slide(slide) for slide in contents.split(SLIDE_DELIM)
-    ))
+    html = INDEX_TMPL.format(
+        slides=''.join(
+            _to_slide(slide) for slide in contents.split(SLIDE_DELIM)
+        ),
+    )
     with open(target, 'w') as f:
         f.write(html)
     return 0
