@@ -93,22 +93,35 @@ def show_makefile() -> int:
     return 0
 
 
-USER = 'Travis-CI'
 EMAIL = 'user@example.com'
 
 
 def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
-    paths = ['.travis.yml'] + paths
-    if os.environ.get('TRAVIS_BRANCH') != master_branch:
-        print(f'Abort: not building {master_branch}')
-        return 0
-    if os.environ.get('TRAVIS_PULL_REQUEST') != 'false':
-        print(f'Abort: building a pull request')
+    if os.environ.get('GITHUB_ACTIONS'):
+        user = 'Github Actions'
+        repo = os.environ['GITHUB_REPOSITORY']
+        commit_msg = 'Deployed to github pages'
+        if os.environ.get('GITHUB_REF') != f'refs/heads/{master_branch}':
+            print(f'Abort: not building {master_branch}')
+            return 0
+    elif os.environ.get('TRAVIS'):
+        user = 'Travis CI'
+        repo = os.environ['TRAVIS_REPO_SLUG']
+        build_number = os.environ['TRAVIS_BUILD_NUMBER']
+        commit_msg = f'Deployed {build_number} to Github Pages'
+        paths = ['.travis.yml'] + paths
+        if os.environ.get('TRAVIS_BRANCH') != master_branch:
+            print(f'Abort: not building {master_branch}')
+            return 0
+        if os.environ.get('TRAVIS_PULL_REQUEST') != 'false':
+            print(f'Abort: building a pull request')
+            return 0
+    else:
+        print(f'Abort: not github actions or travis')
         return 0
 
     token = os.environ['GH_TOKEN']
-    repo = os.environ['TRAVIS_REPO_SLUG']
-    remote = f'https://{token}@github.com/{repo}'
+    remote = f'https://x-access-token:{token}@github.com/{repo}'
     with tempfile.TemporaryDirectory() as tmpdir:
         with cwd(tmpdir):
             print('Cloning...', flush=True)
@@ -144,13 +157,9 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
         with cwd(tmpdir):
             print('Committing...', flush=True)
             subprocess.check_call(('git', 'add', '.'))
-            subprocess.check_call(('git', 'config', 'user.name', USER))
+            subprocess.check_call(('git', 'config', 'user.name', user))
             subprocess.check_call(('git', 'config', 'user.email', EMAIL))
-            build_number = os.environ['TRAVIS_BUILD_NUMBER']
-            subprocess.check_call((
-                'git', 'commit', '-m',
-                f'Deployed {build_number} to Github Pages',
-            ))
+            subprocess.check_call(('git', 'commit', '-m', commit_msg))
             print('Pushing...', flush=True)
             return subprocess.call(
                 ('git', 'push', 'origin', 'HEAD'),
