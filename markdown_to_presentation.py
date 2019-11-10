@@ -159,6 +159,9 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
             subprocess.check_call(('git', 'add', '.'))
             subprocess.check_call(('git', 'config', 'user.name', user))
             subprocess.check_call(('git', 'config', 'user.email', EMAIL))
+            if not subprocess.call(('git', 'diff', '--staged', '--quiet')):
+                print('Nothing to commit!')
+                return 0
             subprocess.check_call(('git', 'commit', '-m', commit_msg))
             print('Pushing...', flush=True)
             return subprocess.call(
