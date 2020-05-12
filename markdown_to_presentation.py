@@ -114,10 +114,10 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
             print(f'Abort: not building {master_branch}')
             return 0
         if os.environ.get('TRAVIS_PULL_REQUEST') != 'false':
-            print(f'Abort: building a pull request')
+            print('Abort: building a pull request')
             return 0
     else:
-        print(f'Abort: not github actions or travis')
+        print('Abort: not github actions or travis')
         return 0
 
     token = os.environ['GH_TOKEN']
