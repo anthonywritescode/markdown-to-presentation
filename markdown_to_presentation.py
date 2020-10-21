@@ -93,12 +93,10 @@ def show_makefile() -> int:
     return 0
 
 
-EMAIL = 'user@example.com'
-
-
 def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
     if os.environ.get('GITHUB_ACTIONS'):
         user = 'Github Actions'
+        email = '41898282+github-actions[bot]@users.noreply.github.com'
         repo = os.environ['GITHUB_REPOSITORY']
         commit_msg = 'Deployed to github pages'
         if os.environ.get('GITHUB_REF') != f'refs/heads/{master_branch}':
@@ -106,6 +104,7 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
             return 0
     elif os.environ.get('TRAVIS'):
         user = 'Travis CI'
+        email = 'user@example.com'
         repo = os.environ['TRAVIS_REPO_SLUG']
         build_number = os.environ['TRAVIS_BUILD_NUMBER']
         commit_msg = f'Deployed {build_number} to Github Pages'
@@ -158,7 +157,7 @@ def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
             print('Committing...', flush=True)
             subprocess.check_call(('git', 'add', '.'))
             subprocess.check_call(('git', 'config', 'user.name', user))
-            subprocess.check_call(('git', 'config', 'user.email', EMAIL))
+            subprocess.check_call(('git', 'config', 'user.email', email))
             if not subprocess.call(('git', 'diff', '--staged', '--quiet')):
                 print('Nothing to commit!')
                 return 0
