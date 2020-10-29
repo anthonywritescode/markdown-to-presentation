@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/anthonywritescode.markdown-to-presentation?branchName=master)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=11&branchName=master)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/anthonywritescode/markdown-to-presentation/master.svg)](https://results.pre-commit.ci/latest/github/anthonywritescode/markdown-to-presentation/master)
 
 markdown-to-presentation
 ========================
