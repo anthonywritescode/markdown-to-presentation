@@ -355,13 +355,13 @@ SLIDE_DELIM = '\n***\n\n'
 
 
 class RawHTMLRenderer(CodeRenderer):
-    def block_code(self, code: str, lang: str) -> str:
-        if lang == 'rawhtml':
+    def block_code(self, code: str, info: Optional[str] = None) -> str:
+        if info == 'rawhtml':
             return code
-        elif lang == 'comment':
+        elif info == 'comment':
             return f'<!--\n{html.escape(code)}\n-->'
         else:
-            return super().block_code(code, lang)
+            return super().block_code(code, info)
 
 
 def _to_slide(md: str) -> str:
