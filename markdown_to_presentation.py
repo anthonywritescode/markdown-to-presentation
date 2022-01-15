@@ -1,4 +1,5 @@
-#!/usr/bin/env python3.6
+from __future__ import annotations
+
 import argparse
 import contextlib
 import html
@@ -9,10 +10,7 @@ import subprocess
 import sys
 import tempfile
 from typing import Callable
-from typing import Dict
 from typing import Generator
-from typing import List
-from typing import Optional
 from typing import Sequence
 
 import pkg_resources
@@ -66,7 +64,7 @@ def cwd(pth: str) -> Generator[None, None, None]:
         os.chdir(pwd)
 
 
-def _read_mtp_version() -> Optional[str]:
+def _read_mtp_version() -> str | None:
     try:
         return open(MTPVERSION).read()
     except OSError:
@@ -93,7 +91,7 @@ def show_makefile() -> int:
     return 0
 
 
-def push(paths: List[str], *, master_branch: str, pages_branch: str) -> int:
+def push(paths: list[str], *, master_branch: str, pages_branch: str) -> int:
     if os.environ.get('GITHUB_ACTIONS'):
         user = 'Github Actions'
         email = '41898282+github-actions[bot]@users.noreply.github.com'
@@ -355,7 +353,7 @@ SLIDE_DELIM = '\n***\n\n'
 
 
 class RawHTMLRenderer(CodeRenderer):
-    def block_code(self, code: str, info: Optional[str] = None) -> str:
+    def block_code(self, code: str, info: str | None = None) -> str:
         if info == 'rawhtml':
             return code
         elif info == 'comment':
@@ -381,7 +379,7 @@ def _make_index_htm(target: str) -> int:
     return 0
 
 
-BACKENDS: Dict[str, Callable[[str], int]] = {
+BACKENDS: dict[str, Callable[[str], int]] = {
     '.mtp/package.json': _make_package_json,
     '.mtp/node_modules': _make_node_modules,
     '.mtp/style.scss': _make_style_scss,
@@ -415,7 +413,7 @@ def run_backend(target: str) -> int:
         return ret
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
