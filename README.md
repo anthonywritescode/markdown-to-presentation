@@ -1,4 +1,4 @@
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/anthonywritescode/markdown-to-presentation/master.svg)](https://results.pre-commit.ci/latest/github/anthonywritescode/markdown-to-presentation/master)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/anthonywritescode/markdown-to-presentation/main.svg)](https://results.pre-commit.ci/latest/github/anthonywritescode/markdown-to-presentation/main)
 
 markdown-to-presentation
 ========================
@@ -113,7 +113,7 @@ The `markdown-to-presentation push` executable takes the following arguments:
 
 ```
 $ markdown-to-presentation push --help
-usage: markdown-to-presentation push [-h] [--master-branch MASTER_BRANCH]
+usage: markdown-to-presentation push [-h] [--main-branch MASTER_BRANCH]
                                      [--pages-branch PAGES_BRANCH]
                                      paths [paths ...]
 
@@ -122,6 +122,6 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --master-branch MASTER_BRANCH
+  --main-branch MASTER_BRANCH
   --pages-branch PAGES_BRANCH
 ```
