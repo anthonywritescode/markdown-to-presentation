@@ -109,19 +109,5 @@ push: venv
     venv/bin/markdown-to-presentation push index.htm build
 ```
 
-The `markdown-to-presentation push` executable takes the following arguments:
-
-```
-$ markdown-to-presentation push --help
-usage: markdown-to-presentation push [-h] [--main-branch MASTER_BRANCH]
-                                     [--pages-branch PAGES_BRANCH]
-                                     paths [paths ...]
-
-positional arguments:
-  paths
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --main-branch MASTER_BRANCH
-  --pages-branch PAGES_BRANCH
-```
+consult the `markdown-to-presentation push --help` to get a full list of
+options.
