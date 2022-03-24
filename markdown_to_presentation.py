@@ -91,14 +91,14 @@ def show_makefile() -> int:
     return 0
 
 
-def push(paths: list[str], *, master_branch: str, pages_branch: str) -> int:
+def push(paths: list[str], *, default_branch: str, pages_branch: str) -> int:
     if os.environ.get('GITHUB_ACTIONS'):
         user = 'Github Actions'
         email = '41898282+github-actions[bot]@users.noreply.github.com'
         repo = os.environ['GITHUB_REPOSITORY']
         commit_msg = 'Deployed to github pages'
-        if os.environ.get('GITHUB_REF') != f'refs/heads/{master_branch}':
-            print(f'Abort: not building {master_branch}')
+        if os.environ.get('GITHUB_REF') != f'refs/heads/{default_branch}':
+            print(f'Abort: not building {default_branch}')
             return 0
     elif os.environ.get('TRAVIS'):
         user = 'Travis CI'
@@ -107,8 +107,8 @@ def push(paths: list[str], *, master_branch: str, pages_branch: str) -> int:
         build_number = os.environ['TRAVIS_BUILD_NUMBER']
         commit_msg = f'Deployed {build_number} to Github Pages'
         paths = ['.travis.yml'] + paths
-        if os.environ.get('TRAVIS_BRANCH') != master_branch:
-            print(f'Abort: not building {master_branch}')
+        if os.environ.get('TRAVIS_BRANCH') != default_branch:
+            print(f'Abort: not building {default_branch}')
             return 0
         if os.environ.get('TRAVIS_PULL_REQUEST') != 'false':
             print('Abort: building a pull request')
@@ -422,7 +422,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     subparsers.add_parser('show-makefile')
     push_parser = subparsers.add_parser('push')
     push_parser.add_argument('paths', nargs='+')
-    push_parser.add_argument('--master-branch', default='master')
+    push_parser.add_argument('--default-branch', default='main')
     push_parser.add_argument('--pages-branch', default='gh-pages')
 
     run_backend_parser = subparsers.add_parser('run-backend')
@@ -437,7 +437,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command == 'push':
         return push(
             args.paths,
-            master_branch=args.master_branch, pages_branch=args.pages_branch,
+            default_branch=args.default_branch, pages_branch=args.pages_branch,
         )
     elif args.command == 'run-backend':
         return run_backend(args.target)
