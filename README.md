@@ -8,7 +8,9 @@ gh-pages
 
 ## Installation
 
-`pip install markdown-to-presentation`
+```bash
+pip install markdown-to-presentation
+```
 
 
 ## Usage
