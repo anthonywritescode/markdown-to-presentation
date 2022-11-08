@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import html
+import importlib.metadata
 import json
 import os.path
 import shutil
@@ -13,7 +14,6 @@ from typing import Callable
 from typing import Generator
 from typing import Sequence
 
-import pkg_resources
 from markdown_code_blocks import CodeRenderer
 from markdown_code_blocks import highlight
 
@@ -51,7 +51,7 @@ index.htm: {MTPVERSION} slides.md
 \t{sys.executable} -m markdown_to_presentation run-backend $@
 '''  # noqa: E501
 
-VERSION = pkg_resources.get_distribution('markdown-to-presentation').version
+VERSION = importlib.metadata.version('markdown-to-presentation')
 
 
 @contextlib.contextmanager
