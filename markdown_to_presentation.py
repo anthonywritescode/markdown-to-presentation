@@ -66,7 +66,8 @@ def cwd(pth: str) -> Generator[None, None, None]:
 
 def _read_mtp_version() -> str | None:
     try:
-        return open(MTPVERSION).read()
+        with open(MTPVERSION) as f:
+            return f.read()
     except OSError:
         return None
 
@@ -368,7 +369,8 @@ def _to_slide(md: str) -> str:
 
 
 def _make_index_htm(target: str) -> int:
-    contents = open('slides.md').read()
+    with open('slides.md') as f:
+        contents = f.read()
     html = INDEX_TMPL.format(
         slides=''.join(
             _to_slide(slide) for slide in contents.split(SLIDE_DELIM)
