@@ -55,7 +55,7 @@ VERSION = importlib.metadata.version('markdown-to-presentation')
 
 
 @contextlib.contextmanager
-def cwd(pth: str) -> Generator[None, None, None]:
+def cwd(pth: str) -> Generator[None]:
     pwd = os.getcwd()
     os.chdir(pth)
     try:
