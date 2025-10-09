@@ -10,9 +10,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 from collections.abc import Generator
 from collections.abc import Sequence
-from typing import Callable
 
 from markdown_code_blocks import CodeRenderer
 from markdown_code_blocks import highlight
