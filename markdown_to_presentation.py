@@ -11,7 +11,6 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Callable
-from collections.abc import Generator
 from collections.abc import Sequence
 
 from markdown_code_blocks import CodeRenderer
@@ -52,16 +51,6 @@ index.htm: {MTPVERSION} slides.md
 '''  # noqa: E501
 
 VERSION = importlib.metadata.version('markdown-to-presentation')
-
-
-@contextlib.contextmanager
-def cwd(pth: str) -> Generator[None]:
-    pwd = os.getcwd()
-    os.chdir(pth)
-    try:
-        yield
-    finally:
-        os.chdir(pwd)
 
 
 def _read_mtp_version() -> str | None:
@@ -121,7 +110,7 @@ def push(paths: list[str], *, default_branch: str, pages_branch: str) -> int:
     token = os.environ['GH_TOKEN']
     remote = f'https://x-access-token:{token}@github.com/{repo}'
     with tempfile.TemporaryDirectory() as tmpdir:
-        with cwd(tmpdir):
+        with contextlib.chdir(tmpdir):
             print('Cloning...', flush=True)
             proc_ret = subprocess.run(
                 ('git', 'clone', remote, '.'),
@@ -152,7 +141,7 @@ def push(paths: list[str], *, default_branch: str, pages_branch: str) -> int:
         print('Copying new files...', flush=True)
         subprocess.check_call(('rsync', '-avrRq', *paths, tmpdir))
 
-        with cwd(tmpdir):
+        with contextlib.chdir(tmpdir):
             print('Committing...', flush=True)
             subprocess.check_call(('git', 'add', '.'))
             subprocess.check_call(('git', 'config', 'user.name', user))
@@ -182,7 +171,7 @@ def _make_package_json(target: str) -> int:
 
 
 def _make_node_modules(target: str) -> int:
-    with cwd(MTPDIR):
+    with contextlib.chdir(MTPDIR):
         subprocess.check_call(('npm', 'install'))
         subprocess.check_call(('npm', 'prune'))
     os.utime(target)
